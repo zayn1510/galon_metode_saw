@@ -8,6 +8,7 @@ import (
 
 type Depot struct {
 	ID             uint           `gorm:"primary_key" json:"id"`
+	KecamatanID    uint64         `json:"id_kecamatan"`
 	NamaDepot      string         `json:"nama_depot" gorm:"type:varchar(100)"`
 	Alamat         string         `json:"alamat" gorm:"type:varchar(100)"`
 	Latitude       float64        `json:"latitude" gorm:"type:decimal(10,6)"`
@@ -19,6 +20,9 @@ type Depot struct {
 	CreatedAt      time.Time      `json:"created_at"`
 	UpdatedAt      time.Time      `json:"updated_at"`
 	DeletedAt      gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+
+	// Relasi
+	Kecamatan Kecamatan `gorm:"foreignkey:KecamatanID" json:"kecamatan"`
 }
 
 func (Depot) TableName() string {

@@ -28,7 +28,10 @@ func (s *DepotService) FindAll(offset, limit int) ([]models.Depot, error) {
 		offset = 0
 	}
 
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").Find(&resutl).Error; err != nil {
+	if err := s.db.Offset(offset).Limit(limit).Order("id asc").
+		Preload("Kecamatan", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "nama_kecamatan")
+		}).Find(&resutl).Error; err != nil {
 		return nil, err
 	}
 	return resutl, nil
