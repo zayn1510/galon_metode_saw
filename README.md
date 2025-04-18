@@ -1,104 +1,174 @@
-**goarchi** adalah sebuah mini-framework open-source berbasis Golang yang menggunakan **Gin**, **GORM**, dan struktur clean architecture. Framework ini memudahkan kamu dalam membangun REST API dengan arsitektur yang rapi, scalable, dan cepat dalam pengembangan.
+# 💧 Sistem Rekomendasi Galon Terbaik di Wilayah Baubau
+Menggunakan **Metode Simple Additive Weighting (SAW)**
+
+Sistem ini membantu merekomendasikan depot galon terbaik di wilayah Baubau berdasarkan berbagai kriteria menggunakan metode SAW. Dibangun menggunakan framework [goarchi](https://github.com/zayn1510/goarchi) berbasis Golang.
 
 ---
 
-## 🚀 Fitur Utama
+## 🚀 Fitur
 
-- 🛠️ generator built-in
-- 🔁 Arsitektur Clean (MVC + Service + Request + Resource)
-- 🔐 Middleware JWT siap pakai
-- 🌐 Dukungan CORS (bisa diaktif/nonaktif)
-- 🧪 Struktur routing yang mudah dan terpisah
-- 📁 Konfigurasi lewat file `.env`
+- ✅ Manajemen data kriteria
+- ✅ Manajemen data depot
+- ✅ Manajemen data user
+- ✅ Manajemen data lokasi user
+- ✅ Manajemen data kecamatan
+- ✅ Perhitungan metode Simple Additive Weighting (SAW)
 
 ---
 
 ## 📦 Instalasi
 
-### 1. Clone repo
+### 1. Clone Repository
 
 ```bash
-git clone https://github.com/zayn1510/goarchi.git my-app
-cd my-app
-2. Salin file environment
+git clone https://github.com/zayn1510/galon_metode_saw.git
+cd galon_metode_saw
+```
 
+### 2. Setup Environment
 
-Copy
+Salin file `.env.example` menjadi `.env`:
+
+```bash
 cp .env.example .env
-Lalu atur konfigurasi database kamu:
+```
 
-env
+Lalu sesuaikan konfigurasi database:
+
+```
+DB_NAME=db_metode_saw_depot
 DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=yourdbname
-3. Install dependency Go
-go mod tidy
+DB_USER=root       # ubah sesuai user MySQL kamu
+DB_PASS=1234       # ubah sesuai password MySQL kamu
+DB_PORT=3329       # port lokal
+DB_PREFIX=tbl
+```
 
-📦 Goarchi - Simple Layered Architecture Generator for Golang
+---
 
-🔧 Controller:
-  goarchi archi controller [name]
-    → Generate a controller (e.g. UserController)
 
-🛠️  Service:
-  goarchi archi service [name]
-    → Generate a service layer (e.g. UserService)
+### 3. Jalankan dengan Docker
 
-📝 Request:
-  goarchi archi request [name] [fields...]
-    → Generate a request struct with validation (e.g. name:string age:int)
+Edit file `docker-compose.yml`, sesuaikan environment MySQL:
 
-📦 Resource:
-  goarchi archi resource [name]
-    → Generate a response formatter (DTO/transformer)
+```yaml
+environment:
+  - DB_NAME=db_metode_saw_depot
+  - DB_HOST=db
+  - DB_USER=root
+  - DB_PASS=1234
+  - DB_PORT=3306
+  - DB_PREFIX=tbl
+```
 
-🧩 Model:
-  goarchi archi model [name] [fields...]
-    → Generate a GORM model with tags
-    → Example: goarchi archi model users "id:int;primaryKey" "name:string;not null"
+> **Catatan:** Jangan lupa sesuaikan juga `user` dan `password` pada service MySQL.
 
-🛠️  Migration:
-  goarchi archi migration [name]
-    → Generate a migration file in 'database/migrations'
+### 4. Build & Jalankan
 
-🧬 Migrate:
-  goarchi migrate
-    → Run all .sql migration files in 'database/migrations'
+#### 🐧 Linux / macOS
 
-📌 Installation via Go (Linux/macOS/Windows):
-  go run cli/main.go install
-  → Will build and (optionally) move the binary to your PATH
+```bash
+./.goarchi build
+docker compose build
+docker compose up -d
+```
 
-📁 After install:
-  You can use 'goarchi' globally from any folder.
+#### 🪟 Windows
 
-🧬 Menjalankan Project
-🧱 Middleware
-✅ Mengaktifkan / Menonaktifkan CORS
-Di dalam main.go, kamu bisa mengatur CORS dengan baris berikut:
+```bash
+go run cli/main.go build
+docker compose build
+docker compose up -d
+```
 
-router := gin.Default()
-middleware.SetCors(router) // aktifkan CORS
-routers.RegisterRoutes(router)
-router.Run(":8080")
-Jika ingin menonaktifkan, cukup hapus atau komen middleware.SetCors(router).
+---
 
-🔐 Middleware JWT
-Untuk mengamankan grup route dengan JWT, kamu tinggal gunakan:
-users := api.Group("users")
-users.Use(middleware.JWTMiddleware())
-🔀 Routing
-Semua definisi routing API dilakukan di file routes/web.go. Kamu bisa mengatur grouping dan handler di sana.
+### 5. Migrasi Database
 
-api := r.Group("/api/v1")
-UserRouter(api) // memanggil router khusus user
-🤝 Kontribusi
-Pull request dan issue sangat terbuka untuk siapa saja yang ingin ikut berkontribusi. Yuk bantu kembangkan bareng!
+#### 🐧 Linux / macOS
 
-📄 Lisensi
-Framework ini dirilis di bawah lisensi MIT.
+```bash
+./.goarchi make migrate up
+```
 
-🙌 Terima Kasih
-Framework ini dibangun dengan semangat open-source dan kolaborasi. Semoga bermanfaat buat proyek-proyek kamu! """
+#### 🪟 Windows
+
+```bash
+goarchi.exe make migrate up
+```
+
+---
+
+## 🌐 API Endpoint
+
+> Sesuaikan dengan port yang digunakan pada `docker-compose`, default: `localhost:8024`
+
+### 📘 Welcome
+| Method | Endpoint            | Keterangan          |
+|--------|---------------------|---------------------|
+| GET    | `/api/v1/welcome`   | Cek koneksi API     |
+
+### 📘 Kriteria
+| Method | Endpoint                | Keterangan           |
+|--------|-------------------------|----------------------|
+| GET    | `/api/v1/kriteria`      | Ambil semua data     |
+| POST   | `/api/v1/kriteria`      | Buat data            |
+| PUT    | `/api/v1/kriteria/{id}` | Update data          |
+| DELETE | `/api/v1/kriteria/{id}` | Hapus data           |
+
+### 📘 Depot
+| Method | Endpoint             | Keterangan           |
+|--------|----------------------|----------------------|
+| GET    | `/api/v1/depot`      | Ambil semua data     |
+| POST   | `/api/v1/depot`      | Buat data            |
+| PUT    | `/api/v1/depot/{id}` | Update data          |
+| DELETE | `/api/v1/depot/{id}` | Hapus data           |
+
+### 📘 User
+| Method | Endpoint            | Keterangan           |
+|--------|---------------------|----------------------|
+| GET    | `/api/v1/user`      | Ambil semua data     |
+| POST   | `/api/v1/user`      | Buat data            |
+| PUT    | `/api/v1/user/{id}` | Update data          |
+| DELETE | `/api/v1/user/{id}` | Hapus data           |
+
+### 📘 Lokasi User
+| Method | Endpoint                        | Keterangan           |
+|--------|----------------------------------|----------------------|
+| GET    | `/api/v1/user-locations`        | Ambil semua data     |
+| POST   | `/api/v1/user-locations`        | Buat data            |
+| PUT    | `/api/v1/user-locations/{id}`   | Update data          |
+| DELETE | `/api/v1/user-locations/{id}`   | Hapus data           |
+
+### 📘 Kecamatan
+| Method | Endpoint               | Keterangan           |
+|--------|------------------------|----------------------|
+| GET    | `/api/v1/kecamatan`    | Ambil semua data     |
+| POST   | `/api/v1/kecamatan`    | Buat data            |
+| PUT    | `/api/v1/kecamatan/{id}` | Update data        |
+| DELETE | `/api/v1/kecamatan/{id}` | Hapus data         |
+
+---
+
+## 🧪 Koleksi Postman
+
+Untuk mempermudah pengujian API, kamu bisa menggunakan file koleksi Postman berikut:
+
+📥 [Download Koleksi Postman](postman/galon-api.postman_collection.json)
+
+**Cara Import:**
+1. Buka Postman.
+2. Klik tombol `Import`.
+3. Pilih file `.json` dari folder `postman/`.
+4. Jalankan request sesuai endpoint yang tersedia.
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+---
+
+## 🙌 Terima Kasih
+
+Framework ini dibangun dengan semangat open-source dan kolaborasi.  
+Semoga bermanfaat untuk proyek-proyek kamu! ✨

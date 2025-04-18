@@ -11,6 +11,7 @@ type CreateDepotRequest struct {
 	Harga          int     `json:"harga" validate:"required"`
 	Diskon         int     `json:"diskon" validate:"required"`
 	Rating         float64 `json:"rating" validate:"required"`
+	KecamatanId    uint64  `json:"kecamatan_id" validate:"required"`
 }
 
 type UpdateDepotRequest struct {
@@ -22,6 +23,7 @@ type UpdateDepotRequest struct {
 	Harga          *int     `json:"harga,omitempty"`
 	Diskon         *int     `json:"diskon,omitempty"`
 	Rating         *float64 `json:"rating,omitempty"`
+	KecamatanId    *uint64  `json:"kecamatan_id,omitempty"`
 }
 
 func (req *CreateDepotRequest) ToDepot() *models.Depot {
@@ -34,6 +36,7 @@ func (req *CreateDepotRequest) ToDepot() *models.Depot {
 		Harga:          req.Harga,
 		Diskon:         req.Diskon,
 		Rating:         req.Rating,
+		KecamatanID:    req.KecamatanId,
 	}
 	return depot
 }

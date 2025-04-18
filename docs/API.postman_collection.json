@@ -1,0 +1,546 @@
+{
+	"info": {
+		"_postman_id": "f2f7a098-9274-4f09-8602-269a4dd5802f",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43693672"
+	},
+	"item": [
+		{
+			"name": "kriteria",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}kriteria?page=0&limit=10",
+							"host": [
+								"{{HOSTNAME}}kriteria"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"keterangan\":\"RatingUfudf\",\n    \"bobot\":0.25,\n    \"tipe\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}kriteria",
+							"host": [
+								"{{HOSTNAME}}kriteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"keterangan\":\"Rating Update\",\n    \"bobot\":0.3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}kriteria/6",
+							"host": [
+								"{{HOSTNAME}}kriteria"
+							],
+							"path": [
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}kriteria/8",
+							"host": [
+								"{{HOSTNAME}}kriteria"
+							],
+							"path": [
+								"8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "kecamatan",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}kecamatan?page=0&limit=10",
+							"host": [
+								"{{HOSTNAME}}kecamatan"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_kecamatan\":\"Bungisss\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}kecamatan",
+							"host": [
+								"{{HOSTNAME}}kecamatan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_kecamatan\" : \"Wolio\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}kecamatan/7",
+							"host": [
+								"{{HOSTNAME}}kecamatan"
+							],
+							"path": [
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}kecamatan/9",
+							"host": [
+								"{{HOSTNAME}}kecamatan"
+							],
+							"path": [
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "depot",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}depot?page=0&limit=10",
+							"host": [
+								"{{HOSTNAME}}depot"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama_depot\": \"Depot Nicky RO\",\n  \"alamat\": \"Jl. Mawar No. 123, Jakarta\",\n  \"latitude\":-5.488832,\n  \"longitude\":122.574285,\n  \"nomor_handphone\": \"081234567890\",\n  \"harga\": 5000,\n  \"diskon\": 23,\n  \"rating\": 4.7\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}depot",
+							"host": [
+								"{{HOSTNAME}}depot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kecamatan_id\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}depot/5",
+							"host": [
+								"{{HOSTNAME}}depot"
+							],
+							"path": [
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}depot/7",
+							"host": [
+								"{{HOSTNAME}}depot"
+							],
+							"path": [
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}users?page=0&limit=10",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alternatif",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}users/alternatif/3",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"path": [
+								"alternatif",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"username\": \"johndoe15\",\n  \"password\": \"password123\",\n  \"role\": \"user\",\n  \"status\": \"active\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}users",
+							"host": [
+								"{{HOSTNAME}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"Adnub\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}users/2",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}users/2",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User location",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}user-locations?page=0&limit=10",
+							"host": [
+								"{{HOSTNAME}}user-locations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userid\" : 3,\n    \"latitude\" :-5.488832,\n    \"longitude\":122.574285\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}user-locations",
+							"host": [
+								"{{HOSTNAME}}user-locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"Adnub\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}users/2",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}users/1",
+							"host": [
+								"{{HOSTNAME}}users"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "welcome",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}welcome",
+					"host": [
+						"{{HOSTNAME}}welcome"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOSTNAME",
+			"value": "http://localhost:8022/api/v1/",
+			"type": "string"
+		}
+	]
+}
