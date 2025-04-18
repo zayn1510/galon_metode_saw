@@ -50,6 +50,13 @@ func SetUpRouterUsersLocation(router *gin.RouterGroup) {
 	users.PUT("/:id", controllers.NewUserlocationController().Update)
 	users.DELETE("/:id", controllers.NewUserlocationController().Delete)
 }
+func SetUpRouterKecamatan(router *gin.RouterGroup) {
+	users := router.Group("kecamatan")
+	users.GET("", controllers.NewKecamatanController().Show)
+	users.POST("", controllers.NewKecamatanController().Create)
+	users.PUT("/:id", controllers.NewKecamatanController().Update)
+	users.DELETE("/:id", controllers.NewKecamatanController().Delete)
+}
 
 func RegisterRoutes(r *gin.Engine) {
 	api := r.Group("/api/v1")
@@ -58,4 +65,5 @@ func RegisterRoutes(r *gin.Engine) {
 	SetUpRouterDepot(api)
 	SetUpRouterUsers(api)
 	SetUpRouterUsersLocation(api)
+	SetUpRouterKecamatan(api)
 }

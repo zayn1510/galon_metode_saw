@@ -30,5 +30,10 @@ var AllMigrations = []Migration{
 		Up:   UpUserLocation,
 		Down: DownUserLocation,
 	},
+	{
+		Name: "create_table_kecamatan",
+		Up:   UpKecamatan,
+		Down: DownKecamatan,
+	},
 	// Tambahkan migration lainnya di sini
 }
