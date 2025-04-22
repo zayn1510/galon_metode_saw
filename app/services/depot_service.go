@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zayn1510/goarchi/app/models"
-	"github.com/zayn1510/goarchi/app/requests"
 	"github.com/zayn1510/goarchi/config"
 	"gorm.io/gorm"
 )
@@ -18,8 +17,15 @@ func NewDepotService() *DepotService {
 		db: config.GetDB(),
 	}
 }
-
-func (s *DepotService) FindAll(offset, limit int) ([]models.Depot, error) {
+func (s *DepotService) CountAll() (int64, error) {
+	var count int64
+	err := s.db.Model(&models.Depot{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+func (s *DepotService) FindAll(offset, limit int, filter string) ([]models.Depot, error) {
 	var resutl []models.Depot
 	if limit <= 0 {
 		limit = 10
@@ -27,15 +33,16 @@ func (s *DepotService) FindAll(offset, limit int) ([]models.Depot, error) {
 	if offset < 0 {
 		offset = 0
 	}
-
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").
-		Preload("Kecamatan", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id", "nama_kecamatan")
-		}).Find(&resutl).Error; err != nil {
+	query := s.db.Offset(offset).Limit(limit).Order("id asc")
+	if filter != "" {
+		query = query.Where("nama_depot LIKE ?", "%"+filter+"%")
+	}
+	if err := query.Find(&resutl).Error; err != nil {
 		return nil, err
 	}
 	return resutl, nil
 }
+
 func (s *DepotService) IsExistId(id uint) (*models.Depot, error) {
 	var result models.Depot
 	if err := s.db.First(&result, id).Error; err != nil {
@@ -61,26 +68,28 @@ func (s *DepotService) Create(k *models.Depot) error {
 	return nil
 }
 
-func (s *DepotService) Update(updateData *requests.UpdateDepotRequest, id uint) error {
+func (s *DepotService) Update(data map[string]interface{}, id uint) error {
 	// check id exist
 	result, err := s.IsExistId(id)
 	if err != nil {
 		return err
 	}
-	if err := s.db.Model(result).Updates(updateData).Error; err != nil {
+
+	if err := s.db.Model(result).Updates(data).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (s *DepotService) Delete(id uint) error {
+func (s *DepotService) Delete(id uint) (*models.Depot, error) {
 	// check id exist
 	result, err := s.IsExistId(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if err := s.db.Delete(result).Error; err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return result, nil
 }

@@ -17,6 +17,7 @@ type Depot struct {
 	Harga          int            `json:"harga"`
 	Diskon         int            `json:"diskon"`
 	Rating         float64        `json:"rating"`
+	Foto           string         `json:"foto" gorm:"type:varchar(255)"`
 	CreatedAt      time.Time      `json:"created_at"`
 	UpdatedAt      time.Time      `json:"updated_at"`
 	DeletedAt      gorm.DeletedAt `gorm:"index" json:"deleted_at"`

@@ -21,7 +21,7 @@ func NewAlternatifService() *AlternatifService {
 
 func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, error) {
 
-	depotModel, err := NewDepotService().FindAll(0, 10)
+	depotModel, err := NewDepotService().FindAll(0, 10, "")
 	if err != nil {
 		return nil, err
 	}
@@ -39,14 +39,19 @@ func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, e
 		depotLon := depot[i].Longitude
 		jarak := tools.Haversine(userLat, userLon, depotLat, depotLon)
 		responseAlternatif[i] = &resources.DepotAlternatif{
-			ID:        value.ID,
-			NamaDepot: value.NamaDepot,
-			Alamat:    value.Alamat,
-			Harga:     value.Harga,
-			Jarak:     tools.FormatJarak(jarak),
-			Diskon:    value.Diskon,
-			Rating:    value.Rating,
-			Distance:  jarak,
+			ID:             value.ID,
+			NamaDepot:      value.NamaDepot,
+			Alamat:         value.Alamat,
+			Harga:          value.Harga,
+			Jarak:          tools.FormatJarak(jarak),
+			Diskon:         value.Diskon,
+			Rating:         value.Rating,
+			Distance:       jarak,
+			Latitude:       value.Latitude,
+			Longitude:      value.Longitude,
+			NomorHandphone: value.NomorHandphone,
+			Foto:           value.Foto,
+			UpdatedAt:      value.UpdatedAt,
 		}
 
 	}
@@ -61,7 +66,7 @@ func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, e
 	maxRating := tools.GetMaxRating(responseAlternatif)
 	responseNormalisasi := make([]*resources.NormalisasiResource, len(depot))
 
-	kriteria, err := NewKriteriaService().FindAll(0, 10)
+	kriteria, err := NewKriteriaService().FindAll(0, 10, "")
 	if err != nil {
 		return nil, err
 	}
@@ -96,18 +101,24 @@ func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, e
 			(normalisasi.Diskon * bobotKriteria["diskon"]) +
 			(normalisasi.Rating * bobotKriteria["rating"]) // Metode saw
 		responseHasil[index] = &resources.HasilSawResource{
-			IDDepot: normalisasi.IDDepot,
-			Depot:   normalisasi.Depot,
-			Harga:   responseAlternatif[index].Harga,
-			Jarak:   responseAlternatif[index].Jarak,
-			Diskon:  responseAlternatif[index].Diskon,
-			Rating:  responseAlternatif[index].Rating,
-			Nilai:   tools.RoundToDecimal(preferensi, 4),
+			IDDepot:        normalisasi.IDDepot,
+			Depot:          normalisasi.Depot,
+			Harga:          responseAlternatif[index].Harga,
+			Jarak:          responseAlternatif[index].Jarak,
+			Diskon:         responseAlternatif[index].Diskon,
+			Rating:         responseAlternatif[index].Rating,
+			Nilai:          tools.RoundToDecimal(preferensi, 4),
+			Image:          responseAlternatif[index].Foto,
+			Alamat:         responseAlternatif[index].Alamat,
+			Latitude:       responseAlternatif[index].Latitude,
+			Longitude:      responseAlternatif[index].Longitude,
+			NomorHandphone: responseAlternatif[index].NomorHandphone,
+			UpdatedAt:      responseAlternatif[index].UpdatedAt,
 		}
 	}
 	tools.SortingHasil(responseHasil, "desc")
 	return &resources.DepotData{
-		//Alternatif:          responseAlternatif,
+		Alternatif:          responseAlternatif,
 		NormalisasiResource: responseNormalisasi,
 		Hasil:               responseHasil,
 	}, nil

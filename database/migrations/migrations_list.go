@@ -35,5 +35,10 @@ var AllMigrations = []Migration{
 		Up:   UpKecamatan,
 		Down: DownKecamatan,
 	},
+	{
+		Name: "create_table_rating",
+		Up:   UpRating,
+		Down: DownRating,
+	},
 	// Tambahkan migration lainnya di sini
 }

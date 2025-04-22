@@ -6,7 +6,7 @@ import (
 
 type KriteriaResource struct {
 	ID        uint    `json:"id"`
-	Kriteria  string  `json:"kriteria"`
+	Kriteria  string  `json:"keterangan"`
 	Bobot     float64 `json:"bobot"`
 	Tipe      int     `json:"tipe"`
 	CreatedAt string  `json:"createdAt"`

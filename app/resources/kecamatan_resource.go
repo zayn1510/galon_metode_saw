@@ -9,6 +9,10 @@ type KecamatanResource struct {
 	UpdatedAt     string `json:"updated_at"`
 	DeletedAt     string `json:"deleted_at"`
 }
+type JumlahDepotKecamatan struct {
+	NamaKecamatan string `json:"nama_kecamatan"`
+	JumlahDepot   int64  `json:"jumlah_depot"`
+}
 
 func NewKecamatanResource(m *models.Kecamatan) *KecamatanResource {
 	var deleteAt string

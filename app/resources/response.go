@@ -8,7 +8,7 @@ import (
 )
 
 type Response struct {
-	Message   string `json:"messsage"`
+	Message   string `json:"message"`
 	Status    bool   `json:"status"`
 	Data      any    `json:"data,omitempty"`
 	Code      int    `json:"code,omitempty"`
@@ -27,6 +27,30 @@ func Success(ctx *gin.Context, message string, data ...any) {
 
 	if len(data) > 0 {
 		response.Data = data[0]
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func SuccessWithPaginaition(ctx *gin.Context, message string, data any, total, offset, limit *int) {
+	response := Response{
+		Message: message,
+		Status:  true,
+		Code:    http.StatusOK,
+	}
+
+	if data != nil {
+		response.Data = data
+	}
+
+	if total != nil {
+		response.Total = *total
+	}
+	if offset != nil {
+		response.Offset = *offset
+	}
+	if limit != nil {
+		response.Limit = *limit
 	}
 
 	ctx.JSON(http.StatusOK, response)
