@@ -15,11 +15,17 @@ type NormalisasiResource struct {
 	Distance float64 `json:"distance,omitempty"`
 }
 type HasilSawResource struct {
-	IDDepot uint    `json:"id_depot"`
-	Depot   string  `json:"depot"`
-	Harga   int     `json:"harga,omitempty"`
-	Jarak   string  `json:"jarak,omitempty"`
-	Diskon  int     `json:"diskon,omitempty"`
-	Rating  float64 `json:"rating,omitempty"`
-	Nilai   float64 `json:"nilai"`
+	IDDepot        uint    `json:"id_depot"`
+	Depot          string  `json:"depot"`
+	Harga          int     `json:"harga,omitempty"`
+	Jarak          string  `json:"jarak,omitempty"`
+	Diskon         int     `json:"diskon,omitempty"`
+	Rating         float64 `json:"rating,omitempty"`
+	Nilai          float64 `json:"nilai"`
+	Image          string  `json:"image"`
+	Alamat         string  `json:"alamat"`
+	Latitude       float64 `json:"latitude"`
+	Longitude      float64 `json:"longitude"`
+	NomorHandphone string  `json:"nomor_handphone"`
+	UpdatedAt      string  `json:"updated_at"`
 }

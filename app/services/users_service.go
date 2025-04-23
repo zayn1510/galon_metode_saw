@@ -19,7 +19,7 @@ func NewUsersService() *UsersService {
 	}
 }
 
-func (s *UsersService) FindAll(offset, limit int) ([]models.User, error) {
+func (s *UsersService) FindAll(offset, limit int, filter string) ([]models.User, error) {
 	var result []models.User
 	if limit <= 0 {
 		limit = 10
@@ -27,9 +27,11 @@ func (s *UsersService) FindAll(offset, limit int) ([]models.User, error) {
 	if offset < 0 {
 		offset = 0
 	}
-
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").
-		Preload("UserLocation").Find(&result).Error; err != nil {
+	query := s.db.Offset(offset).Limit(limit).Order("id asc")
+	if len(filter) > 0 {
+		query = query.Where("name LIKE ?", "%"+filter+"%")
+	}
+	if err := query.Preload("UserLocation").Find(&result).Error; err != nil {
 		return nil, err
 	}
 	return result, nil

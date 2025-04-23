@@ -5,6 +5,7 @@ import (
 	"github.com/zayn1510/goarchi/app/requests"
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
+	"math"
 	"strconv"
 )
 
@@ -47,17 +48,31 @@ func (c *KecamatanController) Show(ctx *gin.Context) {
 	limitStr := ctx.DefaultQuery("limit", "10")
 	limit, _ := strconv.Atoi(limitStr)
 
+	filterStr := ctx.DefaultQuery("filter", "")
 	offset := (page - 1) * limit
 
-	data, err := c.service.FindAll(offset, limit)
+	data, err := c.service.FindAll(offset, limit, filterStr)
 	if err != nil {
 		resources.InternalError(ctx, err)
 		return
 	}
 	response := resources.GetKecamatanResource(data)
-	resources.Success(ctx, "success", response)
+	totaldata, err := c.service.CountAll()
+	if err != nil {
+		resources.InternalError(ctx, err)
+		return
+	}
+	total := int(math.Ceil(float64(totaldata) / float64(limit)))
+	resources.SuccessWithPaginaition(ctx, "success", response, &total, &page, &limit)
 }
-
+func (c *KecamatanController) JumlahDepot(ctx *gin.Context) {
+	data, err := c.service.JumlahDepotKecamatan()
+	if err != nil {
+		resources.InternalError(ctx, err)
+		return
+	}
+	resources.Success(ctx, "success", data)
+}
 func (c *KecamatanController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)

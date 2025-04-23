@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/zayn1510/goarchi/app/controllers"
+	"github.com/zayn1510/goarchi/app/middleware"
 )
 
 func setUpRouterPing(router *gin.RouterGroup) {
@@ -20,7 +21,9 @@ func setUpRouterPing(router *gin.RouterGroup) {
 }
 
 func SetUpRouterKriteria(router *gin.RouterGroup) {
+
 	kriteria := router.Group("kriteria")
+	kriteria.Use(middleware.JWTMiddleware())
 	kriteria.GET("", controllers.NewKriteriaController().Show)
 	kriteria.POST("", controllers.NewKriteriaController().Create)
 	kriteria.PUT("/:id", controllers.NewKriteriaController().Update)
@@ -29,15 +32,21 @@ func SetUpRouterKriteria(router *gin.RouterGroup) {
 
 func SetUpRouterDepot(router *gin.RouterGroup) {
 	depot := router.Group("depot")
+	depot.Use(middleware.JWTMiddleware())
 	depot.GET("", controllers.NewDepotController().Show)
+	depot.GET("/preview/:filename", controllers.NewDepotController().PreviewFile)
+	depot.GET("/:id", controllers.NewDepotController().DetailDepotById)
 	depot.POST("", controllers.NewDepotController().Create)
-	depot.PUT("/:id", controllers.NewDepotController().Update)
+	depot.POST("/update/:id", controllers.NewDepotController().Update)
 	depot.DELETE("/:id", controllers.NewDepotController().Delete)
+
 }
 
 func SetUpRouterUsers(router *gin.RouterGroup) {
 	users := router.Group("users")
+	users.Use(middleware.JWTMiddleware())
 	users.GET("", controllers.NewUsersController().Show)
+	users.GET("/:id", controllers.NewUsersController().UserDetail)
 	users.POST("", controllers.NewUsersController().Create)
 	users.PUT("/:id", controllers.NewUsersController().Update)
 	users.DELETE("/:id", controllers.NewUsersController().Delete)
@@ -45,19 +54,40 @@ func SetUpRouterUsers(router *gin.RouterGroup) {
 }
 func SetUpRouterUsersLocation(router *gin.RouterGroup) {
 	users := router.Group("user-locations")
+	users.Use(middleware.JWTMiddleware())
 	users.GET("", controllers.NewUserlocationController().Show)
 	users.POST("", controllers.NewUserlocationController().Create)
 	users.PUT("/:id", controllers.NewUserlocationController().Update)
 	users.DELETE("/:id", controllers.NewUserlocationController().Delete)
 }
 func SetUpRouterKecamatan(router *gin.RouterGroup) {
-	users := router.Group("kecamatan")
-	users.GET("", controllers.NewKecamatanController().Show)
-	users.POST("", controllers.NewKecamatanController().Create)
-	users.PUT("/:id", controllers.NewKecamatanController().Update)
-	users.DELETE("/:id", controllers.NewKecamatanController().Delete)
+	kecamatan := router.Group("kecamatan")
+	kecamatan.Use(middleware.JWTMiddleware())
+	kecamatan.GET("", controllers.NewKecamatanController().Show)
+	kecamatan.POST("", controllers.NewKecamatanController().Create)
+	kecamatan.PUT("/:id", controllers.NewKecamatanController().Update)
+	kecamatan.DELETE("/:id", controllers.NewKecamatanController().Delete)
+	kecamatan.GET("/jumlah-depot", controllers.NewKecamatanController().JumlahDepot)
 }
 
+func SetUpRouterRating(router *gin.RouterGroup) {
+	rating := router.Group("rating")
+	rating.Use(middleware.JWTMiddleware())
+	rating.GET("", controllers.NewRatingController().Show)
+	rating.POST("", controllers.NewRatingController().Create)
+	rating.PUT("/:id", controllers.NewRatingController().Update)
+	rating.DELETE("/:id", controllers.NewRatingController().Delete)
+}
+
+func SetUpRouterStat(router *gin.RouterGroup) {
+	stat := router.Group("statistik")
+	stat.Use(middleware.JWTMiddleware())
+	stat.GET("", controllers.NewStatsController().GetStats)
+}
+func SetUpRouterAuth(router *gin.RouterGroup) {
+	auth := router.Group("auth")
+	auth.POST("/login", controllers.NewAuthController().Login)
+}
 func RegisterRoutes(r *gin.Engine) {
 	api := r.Group("/api/v1")
 	setUpRouterPing(api)
@@ -66,4 +96,7 @@ func RegisterRoutes(r *gin.Engine) {
 	SetUpRouterUsers(api)
 	SetUpRouterUsersLocation(api)
 	SetUpRouterKecamatan(api)
+	SetUpRouterRating(api)
+	SetUpRouterStat(api)
+	SetUpRouterAuth(api)
 }

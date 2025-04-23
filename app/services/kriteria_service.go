@@ -19,7 +19,7 @@ func NewKriteriaService() *KriteriaService {
 	}
 }
 
-func (s *KriteriaService) FindAll(offset, limit int) ([]models.Kriteria, error) {
+func (s *KriteriaService) FindAll(offset, limit int, filter string) ([]models.Kriteria, error) {
 	var resutl []models.Kriteria
 	if limit <= 0 {
 		limit = 10
@@ -28,7 +28,11 @@ func (s *KriteriaService) FindAll(offset, limit int) ([]models.Kriteria, error) 
 		offset = 0
 	}
 
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").Find(&resutl).Error; err != nil {
+	query := s.db.Offset(offset).Limit(limit).Order("id asc")
+	if filter != "" {
+		query = query.Where("keterangan LIKE ?", "%"+filter+"%")
+	}
+	if err := query.Find(&resutl).Error; err != nil {
 		return nil, err
 	}
 	return resutl, nil

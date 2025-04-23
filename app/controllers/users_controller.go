@@ -6,6 +6,7 @@ import (
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
 	"strconv"
+	"strings"
 )
 
 type UsersController struct {
@@ -51,9 +52,10 @@ func (c *UsersController) Show(ctx *gin.Context) {
 	limitStr := ctx.DefaultQuery("limit", "10")
 	limit, _ := strconv.Atoi(limitStr)
 
+	filter := ctx.DefaultQuery("filter", "")
 	offset := (page - 1) * limit
 
-	data, err := c.service.FindAll(offset, limit)
+	data, err := c.service.FindAll(offset, limit, filter)
 	if err != nil {
 		resources.InternalError(ctx, err)
 		return
@@ -99,4 +101,19 @@ func (c *UsersController) DataAlternatif(ctx *gin.Context) {
 		return
 	}
 	resources.Success(ctx, "success", alternatif)
+}
+func (c *UsersController) UserDetail(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	userDetail, err := c.service.FindById(uint(id))
+	response := resources.NewUserResource(*userDetail)
+	if err != nil {
+		if strings.Contains(err.Error(), "ID tidak ditemukan") {
+			resources.NotFound(ctx, err)
+			return
+		}
+		resources.InternalError(ctx, err)
+		return
+	}
+	resources.Success(ctx, "success", response)
 }

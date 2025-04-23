@@ -5,6 +5,7 @@ import (
 	"github.com/zayn1510/goarchi/app/requests"
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
+	"math"
 	"strconv"
 )
 
@@ -47,15 +48,17 @@ func (c *KriteriaController) Show(ctx *gin.Context) {
 	limitStr := ctx.DefaultQuery("limit", "10")
 	limit, _ := strconv.Atoi(limitStr)
 
+	filterStr := ctx.DefaultQuery("filter", "")
 	offset := (page - 1) * limit
 
-	data, err := c.service.FindAll(offset, limit)
+	data, err := c.service.FindAll(offset, limit, filterStr)
+	total := int(math.Ceil(float64(len(data)) / float64(limit)))
 	if err != nil {
 		resources.InternalError(ctx, err)
 		return
 	}
 	response := resources.GetKriteriaResource(data)
-	resources.Success(ctx, "success", response)
+	resources.SuccessWithPaginaition(ctx, "success", response, &total, &page, &limit)
 }
 
 func (c *KriteriaController) Update(ctx *gin.Context) {

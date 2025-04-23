@@ -16,12 +16,12 @@ type CreateUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	Nama               string     `json:"nama,omitempty"`
-	Email              string     `json:"email,omitempty"`
-	Username           string     `json:"username,omitempty"`
-	Password           string     `json:"password,omitempty"`
-	Role               string     `json:"role,omitempty" validate:"omitempty,oneof=admin user"`
-	Status             string     `json:"status,omitempty" validate:"omitempty,oneof=active inactive banned"`
+	Nama               *string    `json:"nama,omitempty"`
+	Email              *string    `json:"email,omitempty"`
+	Username           *string    `json:"username,omitempty"`
+	Password           *string    `json:"password,omitempty"`
+	Role               *string    `json:"role,omitempty" validate:"omitempty,oneof=admin user"`
+	Status             *string    `json:"status,omitempty" validate:"omitempty,oneof=active inactive banned"`
 	LastPasswordChange *time.Time `json:"last_password_change,omitempty"`
 }
 

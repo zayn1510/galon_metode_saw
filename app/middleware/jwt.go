@@ -13,15 +13,15 @@ import (
 )
 
 const (
-	ErrMissingToken  = "Missing token"
-	ErrInvalidFormat = "Invalid token format"
-	ErrInvalidToken  = "Invalid token"
-	ErrInvalidClaims = "Invalid claims"
-	ErrTokenExpired  = "Token has expired"
+	ErrMissingToken  = "Token tidak ditemukan, silakan login terlebih dahulu"
+	ErrInvalidFormat = "Format Token tidak valid, pastikan menggunakan format 'Bearer <token>'"
+	ErrInvalidToken  = "Token tidak valid, silakan login ulang"
+	ErrInvalidClaims = "Data dalam Token tidak sesuai, silakan login ulang"
+	ErrTokenExpired  = "Token telah kedaluwarsa, silakan login kembali"
 )
 
 var secretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
-var expiredtoken = time.Hour * time.Duration(getEnv("JWT_EXPIRED_TOKEN", "5"))
+var expiredtoken = time.Hour * time.Duration(getEnv("JWT_EXPIRED_TOKEN", "24"))
 
 func getEnv(key, defaultValue string) int {
 	val, exists := os.LookupEnv(key)

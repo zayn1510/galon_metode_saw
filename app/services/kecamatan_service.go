@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/zayn1510/goarchi/app/models"
 	"github.com/zayn1510/goarchi/app/requests"
+	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/config"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ func NewKecamatanService() *KecamatanService {
 	}
 }
 
-func (s *KecamatanService) FindAll(offset, limit int) ([]models.Kecamatan, error) {
+func (s *KecamatanService) FindAll(offset, limit int, filter string) ([]models.Kecamatan, error) {
 	var resutl []models.Kecamatan
 	if limit <= 0 {
 		limit = 10
@@ -28,11 +29,49 @@ func (s *KecamatanService) FindAll(offset, limit int) ([]models.Kecamatan, error
 		offset = 0
 	}
 
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").Find(&resutl).Error; err != nil {
+	query := s.db.Offset(offset).Limit(limit).Order("id asc")
+	if filter != "" {
+		query = query.Where("nama_kecamatan LIKE ?", "%"+filter+"%")
+	}
+	if err := query.Find(&resutl).Error; err != nil {
 		return nil, err
 	}
 	return resutl, nil
 }
+
+func (s *KecamatanService) JumlahDepotKecamatan() ([]*resources.JumlahDepotKecamatan, error) {
+	var hasil []*resources.JumlahDepotKecamatan
+	err := s.db.Raw(`
+	SELECT 
+		k.nama_kecamatan,
+		COUNT(d.id) AS jumlah_depot
+	FROM 
+		tbl_kecamatan k
+	LEFT JOIN 
+		tbl_depot d ON d.kecamatan_id = k.id
+	WHERE 
+		k.deleted_at IS NULL and d.deleted_at IS NULL
+	GROUP BY 
+		k.id, k.nama_kecamatan
+	ORDER BY 
+		jumlah_depot DESC
+`).Scan(&hasil).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return hasil, nil
+}
+
+func (s *KecamatanService) CountAll() (int64, error) {
+	var count int64
+	err := s.db.Model(&models.Kecamatan{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (s *KecamatanService) IsExistId(id uint) (*models.Kecamatan, error) {
 	var result models.Kecamatan
 	if err := s.db.First(&result, id).Error; err != nil {

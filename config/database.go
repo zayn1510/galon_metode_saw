@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"sync"
@@ -37,17 +38,39 @@ func ConnectDB() {
 		DB_USER := os.Getenv("DB_USER")
 		DB_PASS := os.Getenv("DB_PASS")
 		DB_PORT := os.Getenv("DB_PORT")
-
+		DB_LOG := os.Getenv("DB_LOG_LEVEL")
 		if DB_HOST == "" || DB_NAME == "" || DB_USER == "" || DB_PORT == "" {
 			log.Fatal("Pastikan semua variabel database di .env sudah diisi!")
 		}
-
+		// Set log mode
+		var gormLogLevel logger.LogLevel
+		switch DB_LOG {
+		case "silent":
+			gormLogLevel = logger.Silent
+		case "error":
+			gormLogLevel = logger.Error
+		case "warn":
+			gormLogLevel = logger.Warn
+		case "info":
+			gormLogLevel = logger.Info
+		default:
+			gormLogLevel = logger.Silent
+		}
+		newLogger := logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags),
+			logger.Config{
+				SlowThreshold: time.Second,
+				LogLevel:      gormLogLevel,
+				Colorful:      true,
+			},
+		)
 		if !dbConnected {
 			for i := 0; i < 5; i++ {
 				dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True", DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
 				database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 					SkipDefaultTransaction: true,
 					PrepareStmt:            true,
+					Logger:                 newLogger,
 				})
 				if err == nil {
 					sqlDB, err := database.DB()
