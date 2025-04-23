@@ -40,5 +40,10 @@ var AllMigrations = []Migration{
 		Up:   UpRating,
 		Down: DownRating,
 	},
+	{
+		Name: "create_table_login_logs",
+		Up:   UpLoginLogs,
+		Down: DownLoginLogs,
+	},
 	// Tambahkan migration lainnya di sini
 }

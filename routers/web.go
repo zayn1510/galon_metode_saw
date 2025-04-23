@@ -41,6 +41,7 @@ func SetUpRouterDepot(router *gin.RouterGroup) {
 func SetUpRouterUsers(router *gin.RouterGroup) {
 	users := router.Group("users")
 	users.GET("", controllers.NewUsersController().Show)
+	users.GET("/:id", controllers.NewUsersController().UserDetail)
 	users.POST("", controllers.NewUsersController().Create)
 	users.PUT("/:id", controllers.NewUsersController().Update)
 	users.DELETE("/:id", controllers.NewUsersController().Delete)
@@ -74,6 +75,10 @@ func SetUpRouterStat(router *gin.RouterGroup) {
 	stat := router.Group("statistik")
 	stat.GET("", controllers.NewStatsController().GetStats)
 }
+func SetUpRouterAuth(router *gin.RouterGroup) {
+	users := router.Group("auth")
+	users.POST("/login", controllers.NewAuthController().Login)
+}
 func RegisterRoutes(r *gin.Engine) {
 	api := r.Group("/api/v1")
 	setUpRouterPing(api)
@@ -84,4 +89,5 @@ func RegisterRoutes(r *gin.Engine) {
 	SetUpRouterKecamatan(api)
 	SetUpRouterRating(api)
 	SetUpRouterStat(api)
+	SetUpRouterAuth(api)
 }
