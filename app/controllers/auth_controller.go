@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/zayn1510/goarchi/app/middleware"
 	"github.com/zayn1510/goarchi/app/requests"
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
 	"github.com/zayn1510/goarchi/core/tools"
 	"log"
-	"net/http"
 )
 
 type AuthController struct {
@@ -38,34 +38,50 @@ func (c AuthController) Login(ctx *gin.Context) {
 		resources.InternalError(ctx, err)
 		return
 	}
-	ip := ctx.ClientIP()
 
-	userAgent := ctx.GetHeader("User-Agent")
-	geo, err := tools.GetIPDetails(userAgent)
-	if err != nil {
-		log.Println("Error getting IP details:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "unable to fetch IP details"})
+	token, errToken := middleware.GenerateJWT(user.Username)
+	if errToken != nil {
+		resources.InternalError(ctx, errToken)
 		return
 	}
 
-	result := &requests.LoginlogsRequest{
-		UserId:    (user.ID),
-		Nama:      user.Nama,
-		Role:      user.Role,
-		Username:  user.Username,
-		IPAddress: ip,
-		ISP:       geo.ISP,
-		Device:    geo.Device,
-		Browser:   geo.Browser,
-		Country:   geo.Country,
-		Platform:  geo.OS,
-		City:      geo.City,
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Panic di goroutine log:", r)
+			}
+		}()
+		ip := ctx.ClientIP()
+
+		userAgent := ctx.GetHeader("User-Agent")
+		geo, err := tools.GetIPDetails(userAgent)
+		if err != nil {
+			log.Println("Error getting IP details:", err)
+			return
+		}
+		result := &requests.LoginlogsRequest{
+			UserId:    user.ID,
+			Nama:      user.Nama,
+			Role:      user.Role,
+			Username:  user.Username,
+			IPAddress: ip,
+			ISP:       geo.ISP,
+			Device:    geo.Device,
+			Browser:   geo.Browser,
+			Country:   geo.Country,
+			Platform:  geo.OS,
+			City:      geo.City,
+			Token:     token,
+		}
+		if err := c.service.SaveLoginLogs(result.ToModel()); err != nil {
+			log.Println("Gagal simpan login log:", err)
+		}
+	}()
+	response := &resources.AuthResource{
+		Userid:   user.ID,
+		Username: user.Username,
+		Token:    token,
 	}
-	toModelLoginLogs := result.ToModel()
-	if err := c.service.SaveLoginLogs(toModelLoginLogs); err != nil {
-		resources.InternalError(ctx, err)
-		return
-	}
-	resources.Success(ctx, "success", result)
+	resources.Success(ctx, "success", response)
 
 }
