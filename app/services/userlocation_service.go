@@ -45,9 +45,20 @@ func (s *UserlocationService) IsExistId(id uint) (*models.User_location, error) 
 	return &result, nil
 }
 
+func (s *UserlocationService) IsExistIdUser(user_id uint) (*models.User_location, error) {
+	var result models.User_location
+	if err := s.db.Where("user_id =?", user_id).First(&result).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("ID tidak ditemukan")
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (s *UserlocationService) IsUserExist(userid uint) (*models.User_location, error) {
 	var result models.User_location
-	if err := s.db.Where("user_id = ?", userid).First(&result).Error; err != nil {
+	if err := s.db.Order("id desc").Where("user_id = ?", userid).First(&result).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("UserID tidak ditemukan")
 		}

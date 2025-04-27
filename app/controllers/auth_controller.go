@@ -8,19 +8,21 @@ import (
 	"github.com/zayn1510/goarchi/app/services"
 	"github.com/zayn1510/goarchi/core/tools"
 	"log"
+	"math"
+	"strconv"
 )
 
 type AuthController struct {
 	service *services.AuthService
 }
 
-func NewAuthController() AuthController {
-	return AuthController{
+func NewAuthController() *AuthController {
+	return &AuthController{
 		service: services.NewAuthService(),
 	}
 }
 
-func (c AuthController) Login(ctx *gin.Context) {
+func (c *AuthController) Login(ctx *gin.Context) {
 	var req requests.AuthRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		resources.BadRequest(ctx, err)
@@ -39,7 +41,7 @@ func (c AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, errToken := middleware.GenerateJWT(user.Username)
+	token, errToken := middleware.GenerateJWT(user.Username, int64(user.ID))
 	if errToken != nil {
 		resources.InternalError(ctx, errToken)
 		return
@@ -81,7 +83,32 @@ func (c AuthController) Login(ctx *gin.Context) {
 		Userid:   user.ID,
 		Username: user.Username,
 		Token:    token,
+		Role:     user.Role,
 	}
 	resources.Success(ctx, "success", response)
+}
 
+func (c *AuthController) GetAllLoginLogs(ctx *gin.Context) {
+	pageStr := ctx.DefaultQuery("page", "1")
+	page, _ := strconv.Atoi(pageStr)
+
+	limitStr := ctx.DefaultQuery("limit", "10")
+	limit, _ := strconv.Atoi(limitStr)
+
+	offset := (page - 1) * limit
+
+	filterStr := ctx.DefaultQuery("filter", "")
+	data, err := c.service.GetLoginLogs(offset, limit, filterStr)
+	if err != nil {
+		resources.InternalError(ctx, err)
+		return
+	}
+	response := resources.GetLoginLogsResource(data)
+	totaldata, err := c.service.CountLoginLogs()
+	if err != nil {
+		resources.InternalError(ctx, err)
+		return
+	}
+	total := int(math.Ceil(float64(totaldata) / float64(limit)))
+	resources.SuccessWithPaginaition(ctx, "success", response, &total, &page, &limit)
 }

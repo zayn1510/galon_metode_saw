@@ -47,6 +47,7 @@ services:
       - app-dev
     networks:
       - mynetwork
+    restart: always
 
   db:
     image: mysql:5.7

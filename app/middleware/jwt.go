@@ -65,21 +65,29 @@ func validateToken(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
 // Middleware JWT untuk Gin
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Coba ambil token dari header Authorization
 		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": ErrMissingToken})
-			c.Abort()
-			return
-		}
+		var tokenString string
 
-		// Token harus dalam format "Bearer <token>"
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": ErrInvalidFormat})
-			c.Abort()
-			return
+		// Jika tidak ada di header, coba ambil dari cookie
+		if authHeader == "" {
+			cookieToken, err := c.Cookie("token")
+			if err != nil {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": ErrMissingToken})
+				c.Abort()
+				return
+			}
+			tokenString = cookieToken
+		} else {
+			// Token harus dalam format "Bearer <token>"
+			parts := strings.Split(authHeader, " ")
+			if len(parts) != 2 || parts[0] != "Bearer" {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": ErrInvalidFormat})
+				c.Abort()
+				return
+			}
+			tokenString = parts[1]
 		}
-		tokenString := parts[1]
 
 		// Validasi token
 		_, claims, err := validateToken(tokenString)
@@ -95,8 +103,9 @@ func JWTMiddleware() gin.HandlerFunc {
 	}
 }
 
-func GenerateJWT(username string) (string, error) {
+func GenerateJWT(username string, id int64) (string, error) {
 	claims := jwt.MapClaims{
+		"id":       id,
 		"username": username,
 		"exp":      time.Now().Add(expiredtoken).Unix(), // Token berlaku 24 jam
 	}

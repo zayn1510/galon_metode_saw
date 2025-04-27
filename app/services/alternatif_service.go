@@ -37,7 +37,11 @@ func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, e
 		userLon := userDetail.Longitude
 		depotLat := depot[i].Latitude
 		depotLon := depot[i].Longitude
+
 		jarak := tools.Haversine(userLat, userLon, depotLat, depotLon)
+		if jarak < 0.00001 {
+			jarak = 0.00001
+		}
 		responseAlternatif[i] = &resources.DepotAlternatif{
 			ID:             value.ID,
 			NamaDepot:      value.NamaDepot,
@@ -52,6 +56,8 @@ func (s *AlternatifService) ShowAlternatif(userid uint) (*resources.DepotData, e
 			NomorHandphone: value.NomorHandphone,
 			Foto:           value.Foto,
 			UpdatedAt:      value.UpdatedAt,
+			UserLat:        userDetail.Latitude,
+			UserLong:       userDetail.Longitude,
 		}
 
 	}

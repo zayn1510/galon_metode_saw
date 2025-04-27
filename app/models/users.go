@@ -12,6 +12,7 @@ type User struct {
 	Username           string          `gorm:"type:varchar(100);not null;" json:"username"`
 	Email              string          `gorm:"type:varchar(100);not null" json:"email"`
 	Password           string          `gorm:"type:varchar(255);not null" json:"-"`
+	NomorHandphone     string          `gorm:"type:varchar(20);not null" json:"nomor_handphone"`
 	Role               string          `gorm:"type:enum('admin','user');default:'user'" json:"role"`
 	Status             string          `gorm:"type:enum('active','inactive','banned');default:'active'" json:"status"`
 	LastPasswordChange *time.Time      `json:"last_password_change"`

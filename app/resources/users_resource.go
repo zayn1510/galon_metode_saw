@@ -7,16 +7,17 @@ import (
 type UsersResource struct {
 	ID                 uint   `json:"id"`
 	Name               string `json:"name"`
-	Email              string `json:"email"`
+	Email              string `json:"email,omitempty"`
 	Username           string `json:"username"`
-	Password           string `json:"password"`
+	Password           string `json:"password,omitempty"`
 	Role               string `json:"role"`
 	Status             string `json:"status"`
-	LastPasswordChange string `json:"last_password_change"`
+	LastPasswordChange string `json:"last_password_change,omitempty"`
+	NomorHandphone     string `json:"nomor_handphone"`
 
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	DeletedAt string `json:"deleted_at"`
+	CreatedAt string `json:"created_at,omitempty"`
+	UpdatedAt string `json:"updated_at,omitempty"`
+	DeletedAt string `json:"deleted_at,omitempty"`
 }
 
 func NewUserResource(m models.User) *UsersResource {
@@ -40,6 +41,7 @@ func NewUserResource(m models.User) *UsersResource {
 		Role:               m.Role,
 		Status:             m.Status,
 		LastPasswordChange: lastPasswordChange,
+		NomorHandphone:     m.NomorHandphone,
 		CreatedAt:          m.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt:          m.UpdatedAt.Format("2006-01-02 15:04:05"),
 		DeletedAt:          deletedAt,
