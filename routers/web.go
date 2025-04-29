@@ -17,6 +17,16 @@ func setUpRouterPing(router *gin.RouterGroup) {
 			"message": "welcome",
 		})
 	})
+	router.GET("/pong", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	router.GET("/pung", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pung",
+		})
+	})
 
 }
 
@@ -47,6 +57,8 @@ func SetUpRouterUsers(router *gin.RouterGroup) {
 	users.Use(middleware.JWTMiddleware())
 	users.GET("", controllers.NewUsersController().Show)
 	users.GET("/:id", controllers.NewUsersController().UserDetail)
+	users.GET("/by/:username", controllers.NewUsersController().UserDetailByUsername)
+
 	users.POST("", controllers.NewUsersController().Create)
 	users.PUT("/:id", controllers.NewUsersController().Update)
 	users.DELETE("/:id", controllers.NewUsersController().Delete)
@@ -56,6 +68,7 @@ func SetUpRouterUsersLocation(router *gin.RouterGroup) {
 	users := router.Group("user-locations")
 	users.Use(middleware.JWTMiddleware())
 	users.GET("", controllers.NewUserlocationController().Show)
+	users.GET("/:id", controllers.NewUserlocationController().CheckUserLocation)
 	users.POST("", controllers.NewUserlocationController().Create)
 	users.PUT("/:id", controllers.NewUserlocationController().Update)
 	users.DELETE("/:id", controllers.NewUserlocationController().Delete)
@@ -88,8 +101,24 @@ func SetUpRouterAuth(router *gin.RouterGroup) {
 	auth := router.Group("auth")
 	auth.POST("/login", controllers.NewAuthController().Login)
 }
+func setUpRouterLoginLogs(router *gin.RouterGroup) {
+	loginLogs := router.Group("login-logs")
+	loginLogs.Use(middleware.JWTMiddleware())
+	loginLogs.GET("", controllers.NewAuthController().GetAllLoginLogs)
+}
+func SetUpRouterUserRating(router *gin.RouterGroup) {
+	rating := router.Group("user")
+	rating.GET("/rating", controllers.NewRatingController().Show)
+	rating.GET("/depot", controllers.NewDepotController().Show)
+	rating.POST("/signup", controllers.NewUsersController().Create)
+	rating.GET("/alternatif/:id", controllers.NewUsersController().DataAlternatif)
+	depot := router.Group("depot-user")
+	depot.GET("/preview/:filename", controllers.NewDepotController().PreviewFile)
+
+}
+
 func RegisterRoutes(r *gin.Engine) {
-	api := r.Group("/api/v1")
+	api := r.Group("/api/v1/")
 	setUpRouterPing(api)
 	SetUpRouterKriteria(api)
 	SetUpRouterDepot(api)
@@ -99,4 +128,6 @@ func RegisterRoutes(r *gin.Engine) {
 	SetUpRouterRating(api)
 	SetUpRouterStat(api)
 	SetUpRouterAuth(api)
+	setUpRouterLoginLogs(api)
+	SetUpRouterUserRating(api)
 }

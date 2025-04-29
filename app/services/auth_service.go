@@ -49,3 +49,29 @@ func (s *AuthService) SaveLoginLogs(loginlog *models.LoginLog) error {
 	}
 	return nil
 }
+
+func (s *AuthService) GetLoginLogs(offset, limit int, filter string) ([]models.LoginLog, error) {
+	var result []models.LoginLog
+	if limit <= 0 {
+		limit = 10
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	query := s.db.Offset(offset).Limit(limit).Order("id asc")
+	if filter != "" {
+		query = query.Where("nama_depot LIKE ?", "%"+filter+"%")
+	}
+	if err := query.Preload("User").Find(&result).Error; err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+func (s *AuthService) CountLoginLogs() (int64, error) {
+	var count int64
+	err := s.db.Model(&models.LoginLog{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}

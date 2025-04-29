@@ -46,6 +46,17 @@ func (s *UsersService) IsExistId(id uint) (*models.User, error) {
 	}
 	return &result, nil
 }
+func (s *UsersService) IsExistUsername(username string) (*models.User, error) {
+	var result models.User
+	if err := s.db.Where("username =?", username).First(&result).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("Pengguna tidak ditemukan")
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (s *UsersService) FindById(id uint) (*models.User, error) {
 	result, err := s.IsExistId(id)
 	if err != nil {

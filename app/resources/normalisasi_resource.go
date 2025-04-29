@@ -1,15 +1,15 @@
 package resources
 
 type DepotData struct {
-	Alternatif          []*DepotAlternatif     `json:"alternatif"`
-	NormalisasiResource []*NormalisasiResource `json:"normalisasi"`
-	Hasil               []*HasilSawResource    `json:"hasil"`
+	Alternatif          []*DepotAlternatif     `json:"alternatif,omitempty"`
+	NormalisasiResource []*NormalisasiResource `json:"normalisasi,omitempty"`
+	Hasil               []*HasilSawResource    `json:"hasil,omitempty"`
 }
 type NormalisasiResource struct {
 	IDDepot  uint    `json:"id_depot"`
 	Depot    string  `json:"depot"`
 	Harga    float64 `json:"harga,omitempty"`
-	Jarak    float64 `json:"jarak"`
+	Jarak    float64 `json:"jarak,omitempty"`
 	Diskon   float64 `json:"diskon,omitempty"`
 	Rating   float64 `json:"rating,omitempty"`
 	Distance float64 `json:"distance,omitempty"`

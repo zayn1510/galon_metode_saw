@@ -19,20 +19,25 @@ func NewRatingService() *RatingService {
 	}
 }
 
-func (s *RatingService) FindAll(offset, limit int) ([]models.Rating, error) {
-	var resutl []models.Rating
+func (s *RatingService) FindAll(offset, limit int, depotId uint) ([]*models.Rating, error) {
+	var result []*models.Rating
 	if limit <= 0 {
 		limit = 10
 	}
 	if offset < 0 {
 		offset = 0
 	}
+	query := s.db.Offset(offset).Limit(limit).Order("id desc").Preload("User").Preload("Depot")
 
-	if err := s.db.Offset(offset).Limit(limit).Order("id asc").Preload("User").Preload("Depot").Find(&resutl).Error; err != nil {
+	if depotId > 0 {
+		query = query.Where("depot_id = ?", depotId)
+	}
+	if err := query.Find(&result).Error; err != nil {
 		return nil, err
 	}
-	return resutl, nil
+	return result, nil
 }
+
 func (s *RatingService) IsExistId(id uint) (*models.Rating, error) {
 	var result models.Rating
 	if err := s.db.First(&result, id).Error; err != nil {

@@ -97,6 +97,10 @@ func (c *UsersController) DataAlternatif(ctx *gin.Context) {
 	id, _ := strconv.Atoi(idStr)
 	alternatif, err := services.NewAlternatifService().ShowAlternatif(uint(id))
 	if err != nil {
+		if strings.Contains(err.Error(), "ID tidak ditemukan") {
+			resources.NotFound(ctx, err)
+			return
+		}
 		resources.InternalError(ctx, err)
 		return
 	}
@@ -106,7 +110,6 @@ func (c *UsersController) UserDetail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 	userDetail, err := c.service.FindById(uint(id))
-	response := resources.NewUserResource(*userDetail)
 	if err != nil {
 		if strings.Contains(err.Error(), "ID tidak ditemukan") {
 			resources.NotFound(ctx, err)
@@ -114,6 +117,30 @@ func (c *UsersController) UserDetail(ctx *gin.Context) {
 		}
 		resources.InternalError(ctx, err)
 		return
+	}
+	response := resources.NewUserResource(*userDetail)
+	resources.Success(ctx, "success", response)
+}
+
+func (c *UsersController) UserDetailByUsername(ctx *gin.Context) {
+	username := ctx.Param("username")
+
+	userDetail, err := c.service.IsExistUsername(username)
+	if err != nil {
+		if strings.Contains(err.Error(), "Pengguna tidak ditemukan") {
+			resources.NotFound(ctx, err)
+			return
+		}
+		resources.InternalError(ctx, err)
+		return
+	}
+	response := resources.UsersResource{
+		ID:             userDetail.ID,
+		Name:           userDetail.Nama,
+		Username:       userDetail.Username,
+		Role:           userDetail.Role,
+		Status:         userDetail.Status,
+		NomorHandphone: userDetail.NomorHandphone,
 	}
 	resources.Success(ctx, "success", response)
 }

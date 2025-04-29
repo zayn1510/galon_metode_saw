@@ -48,7 +48,10 @@ func (c *RatingController) Show(ctx *gin.Context) {
 
 	offset := (page - 1) * limit
 
-	data, err := c.service.FindAll(offset, limit)
+	depotStr := ctx.DefaultQuery("depot", "0")
+	depot, _ := strconv.Atoi(depotStr)
+	data, err := c.service.FindAll(offset, limit, uint(depot))
+
 	if err != nil {
 		resources.InternalError(ctx, err)
 		return

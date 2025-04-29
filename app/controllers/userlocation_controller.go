@@ -6,6 +6,7 @@ import (
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
 	"strconv"
+	"strings"
 )
 
 type UserlocationController struct {
@@ -57,7 +58,6 @@ func (c *UserlocationController) Show(ctx *gin.Context) {
 	response := resources.GetUserLocationResource(data)
 	resources.Success(ctx, "success", response)
 }
-
 func (c *UserlocationController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -83,4 +83,19 @@ func (c *UserlocationController) Delete(ctx *gin.Context) {
 		return
 	}
 	resources.Success(ctx, "success")
+}
+func (c *UserlocationController) CheckUserLocation(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	result, err := c.service.IsExistIdUser(uint(id))
+	if err != nil {
+		if strings.Contains(err.Error(), "ID tidak ditemukan") {
+			resources.NotFound(ctx, err)
+			return
+		}
+		resources.InternalError(ctx, err)
+		return
+	}
+	response := resources.NewUserLocationResource(*result)
+	resources.Success(ctx, "success", response)
 }

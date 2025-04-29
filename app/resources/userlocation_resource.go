@@ -5,8 +5,8 @@ import "github.com/zayn1510/goarchi/app/models"
 type UserlocationResource struct {
 	ID        uint    `json:"id"`
 	UserID    uint    `json:"user_id"`
-	Username  string  `json:"username"`
-	Name      string  `json:"name"`
+	Username  string  `json:"username,omitempty"`
+	Name      string  `json:"name,omitempty"`
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
 	CreatedAt string  `json:"created_at"`
@@ -22,7 +22,7 @@ func NewUserLocationResource(m models.User_location) *UserlocationResource {
 
 	return &UserlocationResource{ // Mengembalikan pointer agar lebih ringan
 		ID:        m.ID,
-		UserID:    m.User.ID,
+		UserID:    uint(m.UserId),
 		Name:      m.User.Nama,
 		Username:  m.User.Username,
 		Longitude: m.Longitude,
