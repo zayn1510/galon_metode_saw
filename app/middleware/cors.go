@@ -8,7 +8,7 @@ import (
 
 func SetCors(r *gin.Engine) {
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://30ee-2001-448a-702e-1b8c-21f3-b476-1f9c-c277.ngrok-free.app"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://0129-2001-448a-7026-2339-11d6-671-2ccc-847a.ngrok-free.app/"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},

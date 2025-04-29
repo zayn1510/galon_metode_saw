@@ -40,10 +40,10 @@ func NewRatingResource(m models.Rating) *RatingResource {
 	}
 }
 
-func GetRatingResource(data []models.Rating) []*RatingResource {
+func GetRatingResource(data []*models.Rating) []*RatingResource {
 	resources := make([]*RatingResource, len(data))
 	for i, v := range data {
-		resources[i] = NewRatingResource(v)
+		resources[i] = NewRatingResource(*v)
 	}
 	return resources
 }
