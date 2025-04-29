@@ -112,3 +112,23 @@ func (c *AuthController) GetAllLoginLogs(ctx *gin.Context) {
 	total := int(math.Ceil(float64(totaldata) / float64(limit)))
 	resources.SuccessWithPaginaition(ctx, "success", response, &total, &page, &limit)
 }
+
+func (c *AuthController) UpdateNewPassword(ctx *gin.Context) {
+	var req requests.UpdatePasswordRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		resources.BadRequest(ctx, err)
+		return
+	}
+
+	if err, validateErr := requests.Validate(&req); err != nil {
+		resources.BadRequest(ctx, validateErr)
+		return
+	}
+
+	if err := c.service.UpdatePassword(&req); err != nil {
+		resources.InternalError(ctx, err)
+		return
+	}
+
+	resources.Success(ctx, "Password updated successfully", nil)
+}
