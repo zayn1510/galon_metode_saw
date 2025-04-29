@@ -75,3 +75,25 @@ func (s *AuthService) CountLoginLogs() (int64, error) {
 	}
 	return count, nil
 }
+
+func (s *AuthService) UpdatePassword(req *requests.UpdatePasswordRequest) error {
+	hasher := &tools.BcryptHasher{}
+	authReq := &requests.AuthRequest{
+		Username: req.Username,
+		Password: req.Password,
+	}
+	user, err := s.Login(authReq)
+	if err != nil {
+		return err
+	}
+	hashedPassword, err := hasher.Hash(req.NewPassword)
+	if err != nil {
+		return err
+	}
+	user.Password = hashedPassword
+	if err := s.db.Save(user).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

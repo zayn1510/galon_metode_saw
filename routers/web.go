@@ -58,7 +58,6 @@ func SetUpRouterUsers(router *gin.RouterGroup) {
 	users.GET("", controllers.NewUsersController().Show)
 	users.GET("/:id", controllers.NewUsersController().UserDetail)
 	users.GET("/by/:username", controllers.NewUsersController().UserDetailByUsername)
-
 	users.POST("", controllers.NewUsersController().Create)
 	users.PUT("/:id", controllers.NewUsersController().Update)
 	users.DELETE("/:id", controllers.NewUsersController().Delete)
@@ -100,6 +99,10 @@ func SetUpRouterStat(router *gin.RouterGroup) {
 func SetUpRouterAuth(router *gin.RouterGroup) {
 	auth := router.Group("auth")
 	auth.POST("/login", controllers.NewAuthController().Login)
+	auth.Use(middleware.JWTMiddleware())
+	{
+		auth.PUT("/update-password", controllers.NewAuthController().UpdateNewPassword)
+	}
 }
 func setUpRouterLoginLogs(router *gin.RouterGroup) {
 	loginLogs := router.Group("login-logs")
@@ -114,7 +117,6 @@ func SetUpRouterUserRating(router *gin.RouterGroup) {
 	rating.GET("/alternatif/:id", controllers.NewUsersController().DataAlternatif)
 	depot := router.Group("depot-user")
 	depot.GET("/preview/:filename", controllers.NewDepotController().PreviewFile)
-
 }
 
 func RegisterRoutes(r *gin.Engine) {

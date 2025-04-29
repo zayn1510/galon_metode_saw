@@ -78,6 +78,7 @@ services:
       - db
     networks:
       - mynetwork
+    restart: always
 
 volumes:
   mysql_data:
