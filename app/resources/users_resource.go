@@ -37,7 +37,6 @@ func NewUserResource(m models.User) *UsersResource {
 		Name:               m.Nama,
 		Email:              m.Email,
 		Username:           m.Username,
-		Password:           m.Password,
 		Role:               m.Role,
 		Status:             m.Status,
 		LastPasswordChange: lastPasswordChange,

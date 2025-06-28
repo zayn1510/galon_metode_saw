@@ -5,4 +5,5 @@ type AuthResource struct {
 	Username string `json:"username"`
 	Token    string `json:"token"`
 	Role     string `json:"role"`
+	Status string `json:"status"`
 }

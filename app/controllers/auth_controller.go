@@ -1,15 +1,16 @@
 package controllers
 
 import (
+	"log"
+	"math"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/zayn1510/goarchi/app/middleware"
 	"github.com/zayn1510/goarchi/app/requests"
 	"github.com/zayn1510/goarchi/app/resources"
 	"github.com/zayn1510/goarchi/app/services"
 	"github.com/zayn1510/goarchi/core/tools"
-	"log"
-	"math"
-	"strconv"
 )
 
 type AuthController struct {
@@ -84,6 +85,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		Username: user.Username,
 		Token:    token,
 		Role:     user.Role,
+		Status:   user.Status,
 	}
 	resources.Success(ctx, "success", response)
 }
